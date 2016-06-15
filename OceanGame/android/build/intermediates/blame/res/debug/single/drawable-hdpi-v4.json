@@ -1,5 +1,9 @@
 [
     {
+        "merged": "C:\\Users\\Tom\\Documents\\_Programming\\OceanGame\\OceanGame\\android\\build\\intermediates\\res\\merged\\debug\\drawable-hdpi-v4\\ic_launcher.png",
+        "source": "C:\\Users\\Tom\\Documents\\_Programming\\OceanGame\\OceanGame\\android\\res\\drawable-hdpi\\ic_launcher.png"
+    },
+    {
         "merged": "C:\\Users\\seminar\\Documents\\SI at UCF\\OceanGame\\android\\build\\intermediates\\res\\merged\\debug\\drawable-hdpi-v4\\ic_launcher.png",
         "source": "C:\\Users\\seminar\\Documents\\SI at UCF\\OceanGame\\android\\res\\drawable-hdpi\\ic_launcher.png"
     }
