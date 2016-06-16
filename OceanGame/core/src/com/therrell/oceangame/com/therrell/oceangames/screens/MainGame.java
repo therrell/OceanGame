@@ -60,11 +60,10 @@ public class MainGame implements Screen {
 
         //background
         ocean = new Texture("ocean.jpg");
-
         ocean2 = new Texture("oceanflip.jpg");
 
         //mine
-        //min = new Texture("min.png");
+
 
         x = (float)Gdx.graphics.getWidth();
         need = false;
@@ -102,6 +101,10 @@ public class MainGame implements Screen {
 
     public void render(float delta) {
 
+        //TODO: mines not spawning at bottom
+        //TODO: fix mines overlapping
+        //TODO: fish collision
+
         Gdx.gl.glClearColor(1, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         int counter = 0;
@@ -124,10 +127,12 @@ public class MainGame implements Screen {
         batch.draw(ocean, currBG, 0);
         batch.draw(ocean2, currBG + ocean.getWidth(), 0);
 
+        //draw mines
         for(Obstacle d : mineList){
             d.Draw(batch);
         }
 
+        //check number of players
         if (numP == 3) {
             fish.draw(batch);
             crab.draw(batch);
@@ -145,7 +150,7 @@ public class MainGame implements Screen {
 
         //move background
         if(dl > currBG + ocean.getWidth()) {
-            currBG += ocean.getWidth() * 2;
+            currBG += ocean.getWidth();
         }
 
         //change pos of characters
@@ -290,7 +295,7 @@ public class MainGame implements Screen {
                 }
             }
 
-            //TODO: add obstacles
+            // obstacles
             need = false;
             Vector3 clickspace = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
             cam.unproject(clickspace);
