@@ -28,8 +28,10 @@ public class MainGame implements Screen {
 
     //camera
     OrthographicCamera cam;
+
     //variables
     float x1 = 250, y1 = 25, x2 = 250, y2 = 150, x3 = 250, y3 = 275;
+    float maxVel = 10;
     float timer = 2.3f;
     int dl = 0, currBG = 0;
     int numP;
@@ -63,10 +65,9 @@ public class MainGame implements Screen {
         ocean2 = new Texture("oceanflip.jpg");
 
         //mine
-
-
         x = (float)Gdx.graphics.getWidth();
         need = false;
+
         //manipulate sprites
         fish = new Sprite(fishPic);
         crab = new Sprite(crabPic);
@@ -75,6 +76,11 @@ public class MainGame implements Screen {
         fish.setSize(75, 50);
         crab.setSize(75, 50);
         seahorse.setSize(75, 50);
+
+        //change pos of characters
+        fish.setPosition(x1, y1);
+        crab.setPosition(x2, y2);
+        seahorse.setPosition(x3, y3);
 
         //camera and alive array
         cam = new OrthographicCamera();
@@ -153,10 +159,7 @@ public class MainGame implements Screen {
             currBG += ocean.getWidth();
         }
 
-        //change pos of characters
-        fish.setPosition(x1, y1);
-        crab.setPosition(x2, y2);
-        seahorse.setPosition(x3, y3);
+
 
         //handle collision
         for(Obstacle i : mineList) {
@@ -209,14 +212,17 @@ public class MainGame implements Screen {
 
             if (fish.getX() > dl + Gdx.graphics.getWidth() - fish.getWidth()) {
                 fish.setX(dl + Gdx.graphics.getWidth() - fish.getWidth());
+                speed1[0] = 0;
                 x1 = fish.getX();
             }
             if (crab.getX() > dl + Gdx.graphics.getWidth() - crab.getWidth()) {
                 crab.setX(dl + Gdx.graphics.getWidth() - crab.getWidth());
+                speed2[0] = 0;
                 x2 = crab.getX();
             }
             if (seahorse.getX() > dl + Gdx.graphics.getWidth() - seahorse.getWidth()) {
                 seahorse.setX(dl + Gdx.graphics.getWidth() - seahorse.getWidth());
+                speed3[0] = 0;
                 x3 = seahorse.getX();
             }
 
@@ -224,75 +230,47 @@ public class MainGame implements Screen {
             if (fish.getY() > Gdx.graphics.getHeight() - fish.getHeight()) {
                 fish.setY(Gdx.graphics.getHeight() - fish.getHeight());
                 y1 = fish.getY();
+                speed1[1] = 0;
             }
             if (crab.getY() > Gdx.graphics.getHeight() - crab.getHeight()) {
                 crab.setY(Gdx.graphics.getHeight() - crab.getHeight());
                 y2 = crab.getY();
+                speed2[1] = 0;
             }
             if (seahorse.getY() > Gdx.graphics.getHeight() - seahorse.getHeight()) {
                 seahorse.setY(Gdx.graphics.getHeight() - seahorse.getHeight());
                 y3 = seahorse.getY();
+                speed3[1] = 0;
             }
             //bottom boundary
             if (fish.getY() < 0) {
                 fish.setY(0);
                 y1 = fish.getY();
+                speed1[1] = 0;
             }
             if (crab.getY() < 0) {
                 crab.setY(0);
                 y2 = crab.getY();
+                speed2[1] = 0;
             }
             if (seahorse.getY() < 0) {
                 seahorse.setY(0);
                 y3 = seahorse.getY();
+                speed3[1] = 0;
             }
 
             //fish movement
-            if (alive.contains(fish)) {
-                if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-                    y1 += 10;
-                }
-                if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-                    x1 -= 10;
-                }
-                if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-                    y1 -= 10;
-                }
-                if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-                    x1 += 10;
-                }
-            }
 
+            if (alive.contains(fish)) {
+                moveP1();
+            }
             //crab movement
             if (alive.contains(crab)) {
-                if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-                    y2 += 10;
-                }
-                if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-                    x2 -= 10;
-                }
-                if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-                    y2 -= 10;
-                }
-                if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-                    x2 += 10;
-                }
+                moveP2();
             }
-
             //seahorse movement
             if (alive.contains(seahorse)) {
-                if (Gdx.input.isKeyPressed(Input.Keys.NUMPAD_8)) {
-                    y3 += 10;
-                }
-                if (Gdx.input.isKeyPressed(Input.Keys.NUMPAD_4)) {
-                    x3 -= 10;
-                }
-                if (Gdx.input.isKeyPressed(Input.Keys.NUMPAD_5)) {
-                    y3 -= 10;
-                }
-                if (Gdx.input.isKeyPressed(Input.Keys.NUMPAD_6)) {
-                    x3 += 10;
-                }
+                moveP3();
             }
 
             // obstacles
@@ -309,7 +287,6 @@ public class MainGame implements Screen {
                 time = 0;
             }
         }
-
 
         //determines winner
        if(alive.size() == 1)
@@ -336,6 +313,218 @@ public class MainGame implements Screen {
 
     }
     public void dispose() {
+
+    }
+
+    public boolean WS() {
+        boolean give = false;
+
+        if(Gdx.input.isKeyPressed(Input.Keys.W))
+            give = true;
+
+        else if(Gdx.input.isKeyPressed(Input.Keys.S))
+            give = true;
+
+
+        return(give);
+    }
+    public boolean AD() {
+        boolean give = false;
+
+        if(Gdx.input.isKeyPressed(Input.Keys.A))
+            give = true;
+
+        else if(Gdx.input.isKeyPressed(Input.Keys.D))
+            give = true;
+
+
+        return(give);
+    }
+
+    public boolean Varr() {
+        boolean give = false;
+
+        if(Gdx.input.isKeyPressed(Input.Keys.UP))
+            give = true;
+
+        else if(Gdx.input.isKeyPressed(Input.Keys.DOWN))
+            give = true;
+
+        return(give);
+    }
+    public boolean Harr() {
+        boolean give = false;
+
+        if(Gdx.input.isKeyPressed(Input.Keys.LEFT))
+            give = true;
+
+        else if(Gdx.input.isKeyPressed(Input.Keys.RIGHT))
+            give = true;
+
+        return(give);
+    }
+
+    public boolean Vnum() {
+        boolean give = false;
+
+        if(Gdx.input.isKeyPressed(Input.Keys.NUMPAD_8))
+            give = true;
+
+        else if(Gdx.input.isKeyPressed(Input.Keys.NUMPAD_5))
+            give = true;
+
+        return(give);
+    }
+    public boolean Hnum() {
+        boolean give = false;
+
+        if(Gdx.input.isKeyPressed(Input.Keys.NUMPAD_4))
+            give = true;
+
+        else if(Gdx.input.isKeyPressed(Input.Keys.NUMPAD_6))
+            give = true;
+
+        return(give);
+    }
+
+    float speed1[] = {0,0};
+    float speed2[] = {0,0};
+    float speed3[] = {0,0};
+
+    //TODO: fix accel
+    public void moveP1()
+    {
+        if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+
+            if(speed1[1] < 10)
+                speed1[1] += 1;
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+
+            if(speed1[0] > -10)
+                speed1[0] -= 1;
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.S)) {
+
+            if(speed1[1] > -10)
+                speed1[1] -= 1;
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+
+            if(speed1[0] < 10)
+                speed1[0] += 1;
+        }
+
+        fish.setPosition(fish.getX() + speed1[0], fish.getY() + speed1[1]);
+
+        if(!AD() && speed1[0] > 0)
+        {
+            speed1[0] -= 1;
+        }
+        if(!AD() && speed1[0] < 0)
+        {
+            speed1[0] += 1;
+        }
+
+        if(!WS() && speed1[1] > 0)
+        {
+            speed1[1] -= 1;
+        }
+        if(!WS() && speed1[1] < 0)
+        {
+            speed1[1] += 1;
+        }
+
+
+    }
+
+    public void moveP2()
+    {
+        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+
+            if(speed2[1] < 10)
+                speed2[1] += 1;
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+
+            if(speed2[0] > -10)
+                speed2[0] -= 1;
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+
+            if(speed2[1] > -10)
+                speed2[1] -= 1;
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+
+            if(speed2[0] < 10)
+                speed2[0] += 1;
+        }
+
+        crab.setPosition(crab.getX() + speed2[0], crab.getY() + speed2[1]);
+
+        if(!Harr() && speed2[0] > 0)
+        {
+            speed2[0] -= 1;
+        }
+        if(!Harr() && speed2[0] < 0)
+        {
+            speed2[0] += 1;
+        }
+
+        if(!Varr() && speed2[1] > 0)
+        {
+            speed2[1] -= 1;
+        }
+        if(!Varr() && speed2[1] < 0)
+        {
+            speed2[1] += 1;
+        }
+
+    }
+
+    public void moveP3()
+    {
+        if (Gdx.input.isKeyPressed(Input.Keys.NUMPAD_8)) {
+
+            if(speed3[1] < 10)
+                speed3[1] += 1;
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.NUMPAD_4)) {
+
+            if(speed3[0] > -10)
+                speed3[0] -= 1;
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.NUMPAD_5)) {
+
+            if(speed3[1] > -10)
+                speed3[1] -= 1;
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.NUMPAD_6)) {
+
+            if(speed3[0] < 10)
+                speed3[0] += 1;
+        }
+
+        seahorse.setPosition(seahorse.getX() + speed3[0], seahorse.getY() + speed3[1]);
+
+        if(!Hnum() && speed3[0] > 0)
+        {
+            speed3[0] -= 1;
+        }
+        if(!Hnum() && speed3[0] < 0)
+        {
+            speed3[0] += 1;
+        }
+
+        if(!Vnum() && speed3[1] > 0)
+        {
+            speed3[1] -= 1;
+        }
+        if(!Vnum() && speed3[1] < 0)
+        {
+            speed3[1] += 1;
+        }
 
     }
 }
