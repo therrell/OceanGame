@@ -781,32 +781,40 @@ public class MainGame implements Screen {
 
     //determines winner based on farthest movement
     public void getWinner(int players) {
+        int score;
         if(players == 1)
         {
-            myGame.setScreen(new EndScreen(myGame, fishPic));
+            score = (int) fish.getX();
+            myGame.setScreen(new EndScreen(myGame, fishPic,score));
         }
         else if(players == 2) {
             if(crab.getX() > fish.getX())
             {
-                myGame.setScreen(new EndScreen(myGame, crabPic));
+                score = (int) crab.getX();
+                myGame.setScreen(new EndScreen(myGame, crabPic,score));
+
             }
             else
             {
-                myGame.setScreen(new EndScreen(myGame, fishPic));
+                score = (int) fish.getX();
+                myGame.setScreen(new EndScreen(myGame, fishPic,score));
             }
         }
         else if(players == 3) {
             if(crab.getX() > fish.getX() && crab.getX() > seahorse.getX())
             {
-                myGame.setScreen(new EndScreen(myGame, crabPic));
+                score = (int) crab.getX();
+                myGame.setScreen(new EndScreen(myGame, crabPic,score));
             }
             else if(fish.getX() > crab.getX() && fish.getX() > seahorse.getX())
             {
-                myGame.setScreen(new EndScreen(myGame, fishPic));
+                score = (int) fish.getX();
+                myGame.setScreen(new EndScreen(myGame, fishPic,score));
             }
             else if(seahorse.getX() > crab.getX() && seahorse.getX() > fish.getX())
             {
-                myGame.setScreen(new EndScreen(myGame, sHorsePic));
+                score = (int) seahorse.getX();
+                myGame.setScreen(new EndScreen(myGame, sHorsePic,score));
             }
         }
 
