@@ -4,12 +4,15 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Cursor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.therrell.oceangame.OceanGame;
+
+import java.util.ArrayList;
 
 
 public class EndScreen implements Screen {
@@ -21,10 +24,17 @@ public class EndScreen implements Screen {
     Sprite winner;
     Sound win;
     boolean first = true;
+    int score;
+    Texture[] nums = new Texture[10];
+    int xNum = 600;
+    boolean rend1 = true;
 
-    public EndScreen(OceanGame g, Texture w) {
+    static ArrayList<Texture> drawScore;
+
+    public EndScreen(OceanGame g, Texture w, int sc) {
         myGame = g;
         winpic = w;
+        score = sc;
     }
 
     public void show() {
@@ -39,6 +49,13 @@ public class EndScreen implements Screen {
         winner.setSize(300,200);
         winner.setPosition(350, 300);
         win = Gdx.audio.newSound(Gdx.files.internal("win_sound.wav"));
+
+        drawScore = new ArrayList<Texture>();
+
+        for(int i = 0; i < 10; i++)
+        {
+            nums[i] = new Texture("num_" + i + ".png");
+        }
     }
 
     public void render(float delta) {
@@ -56,7 +73,12 @@ public class EndScreen implements Screen {
         batch.begin();
         batch.draw(winGraph, 0, 0);
         winner.draw(batch);
+
+        drawFinScore();
+
         batch.end();
+
+
 
         if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
             myGame.setScreen(new Menu(myGame));
@@ -77,6 +99,32 @@ public class EndScreen implements Screen {
 
     }
     public void dispose() {
+
+    }
+
+    public void getScore(int finScore) {
+
+        int mod;
+
+        while(finScore > 0)
+        {
+            mod = finScore % 10;
+            drawScore.add(0,nums[mod]);
+
+            finScore -= mod;
+            finScore/=10;
+        }
+    }
+
+    public void drawFinScore() {
+            if(rend1) {
+                getScore(score);
+                rend1 = false;
+            }
+
+            for (int i = 0; i < drawScore.size(); i++) {
+                batch.draw(drawScore.get(i), xNum + (60 * i), 570);
+            }
 
     }
 }
