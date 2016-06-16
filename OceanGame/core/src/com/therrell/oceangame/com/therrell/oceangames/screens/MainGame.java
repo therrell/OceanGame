@@ -280,7 +280,183 @@ public class MainGame implements Screen {
             speed3[1] = 0;
         }
 
+        playerCollisions();
+        lethalCollisions();
+    }
+    public void playerCollisions() {
 
+        //fish and crab collision
+        if(hitbox[0].overlaps(hitbox[1])) {
+            if(fish.getX() > crab.getX()) {
+                if(fish.getY() > crab.getY()) {
+                    fish.setY(fish.getY() + 1);
+                    crab.setY(crab.getY() - 1);
+                    speed1[1] = 5;
+                    speed2[1] = -5;
+                }
+                else if(fish.getY() < crab.getY()) {
+                    fish.setY(fish.getY() - 1);
+                    crab.setY(crab.getY() + 1);
+                    speed1[1] = -5;
+                    speed2[1] = 5;
+                }
+                fish.setX(fish.getX() + 1);
+                crab.setX(crab.getX() - 1);
+                speed1[0] = 5;
+                speed2[0] = -5;
+
+            }
+            else if(fish.getX() < crab.getX()) {
+                if(fish.getY() > crab.getY()) {
+                    fish.setY(fish.getY() + 1);
+                    crab.setY(crab.getY() - 1);
+                    speed1[1] = 5;
+                    speed2[1] = -5;
+                }
+                else if(fish.getY() < crab.getY()) {
+                    fish.setY(fish.getY() - 1);
+                    crab.setY(crab.getY() + 1);
+                    speed1[1] = -5;
+                    speed2[1] = 5;
+                }
+                fish.setX(fish.getX() - 1);
+                crab.setX(crab.getX() + 1);
+                speed1[0] = -5;
+                speed2[0] = 5;
+            }
+            else {
+                if(fish.getY() > crab.getY()) {
+                    fish.setY(fish.getY() + 1);
+                    crab.setY(crab.getY() - 1);
+                    speed1[1] = 5;
+                    speed2[1] = -5;
+
+                }
+                else if(fish.getY() < crab.getY()) {
+                    fish.setY(fish.getY() - 1);
+                    crab.setY(crab.getY() + 1);
+                    speed1[1] = -5;
+                    speed2[1] = +5;
+
+                }
+            }
+        }
+
+        //fish and seahorse collision
+        if(hitbox[0].overlaps(hitbox[2])) {
+            if(fish.getX() > seahorse.getX()) {
+                if(fish.getY() > seahorse.getY()) {
+                    fish.setY(fish.getY() + 1);
+                    seahorse.setY(seahorse.getY() - 1);
+                    speed1[1] = 5;
+                    speed3[1] = -5;
+                }
+                else if(fish.getY() < seahorse.getY()) {
+                    fish.setY(fish.getY() - 1);
+                    seahorse.setY(seahorse.getY() + 1);
+                    speed1[1] = -5;
+                    speed3[1] = 5;
+                }
+                fish.setX(fish.getX() + 1);
+                seahorse.setX(seahorse.getX() - 1);
+                speed1[0] = 5;
+                speed3[0] = -5;
+
+            }
+            else if(fish.getX() < seahorse.getX()) {
+                if(fish.getY() > seahorse.getY()) {
+                    fish.setY(fish.getY() + 1);
+                    seahorse.setY(seahorse.getY() - 1);
+                    speed1[1] = 5;
+                    speed3[1] = -5;
+                }
+                else if(fish.getY() < seahorse.getY()) {
+                    fish.setY(fish.getY() - 1);
+                    seahorse.setY(seahorse.getY() + 1);
+                    speed1[1] = -5;
+                    speed3[1] = 5;
+                }
+                fish.setX(fish.getX() - 1);
+                seahorse.setX(seahorse.getX() + 1);
+                speed1[0] = -5;
+                speed3[0] = 5;
+            }
+            else {
+                if(fish.getY() > seahorse.getY()) {
+                    fish.setY(fish.getY() + 1);
+                    seahorse.setY(seahorse.getY() - 1);
+                    speed1[1] = 5;
+                    speed3[1] = -5;
+
+                }
+                else if(fish.getY() < seahorse.getY()) {
+                    fish.setY(fish.getY() - 1);
+                    seahorse.setY(seahorse.getY() + 1);
+                    speed1[1] = -5;
+                    speed3[1] = +5;
+
+                }
+            }
+        }
+
+        //seahorse and crab collision
+        if(hitbox[1].overlaps(hitbox[2])) {
+            if(crab.getX() > seahorse.getX()) {
+                if(crab.getY() > seahorse.getY()) {
+                    crab.setY(crab.getY() + 1);
+                    seahorse.setY(seahorse.getY() - 1);
+                    speed2[1] = 5;
+                    speed3[1] = -5;
+                }
+                else if(crab.getY() < seahorse.getY()) {
+                    crab.setY(crab.getY() - 1);
+                    seahorse.setY(seahorse.getY() + 1);
+                    speed2[1] = -5;
+                    speed3[1] = 5;
+                }
+                crab.setX(crab.getX() + 1);
+                seahorse.setX(seahorse.getX() - 1);
+                speed2[0] = 5;
+                speed3[0] = -5;
+
+            }
+            else if(crab.getX() < seahorse.getX()) {
+                if(crab.getY() > seahorse.getY()) {
+                    crab.setY(crab.getY() + 1);
+                    seahorse.setY(seahorse.getY() - 1);
+                    speed2[1] = 5;
+                    speed3[1] = -5;
+                }
+                else if(crab.getY() < seahorse.getY()) {
+                    crab.setY(crab.getY() - 1);
+                    seahorse.setY(seahorse.getY() + 1);
+                    speed2[1] = -5;
+                    speed3[1] = 5;
+                }
+                crab.setX(crab.getX() - 1);
+                seahorse.setX(seahorse.getX() + 1);
+                speed2[0] = -5;
+                speed3[0] = 5;
+            }
+            else {
+                if(crab.getY() > seahorse.getY()) {
+                    crab.setY(crab.getY() + 1);
+                    seahorse.setY(seahorse.getY() - 1);
+                    speed2[1] = 5;
+                    speed3[1] = -5;
+
+                }
+                else if(crab.getY() < seahorse.getY()) {
+                    crab.setY(crab.getY() - 1);
+                    seahorse.setY(seahorse.getY() + 1);
+                    speed2[1] = -5;
+                    speed3[1] = +5;
+
+                }
+            }
+        }
+    }
+    public void lethalCollisions() {
         //kill if touches back
         if (fish.getX() < dl) {
             alive.remove(fish);
@@ -306,6 +482,7 @@ public class MainGame implements Screen {
             }
         }
     }
+
     public void checkAlive() {
         //fish movement
         if (alive.contains(fish))
