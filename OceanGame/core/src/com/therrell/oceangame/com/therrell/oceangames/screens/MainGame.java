@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.therrell.oceangame.Obstacle;
 import com.therrell.oceangame.OceanGame;
+import com.therrell.oceangame.Treasure;
 
 import java.util.ArrayList;
 
@@ -30,13 +31,14 @@ public class MainGame implements Screen {
 
     //variables
     float speed1[] = {0,0}, speed2[] = {0,0}, speed3[] = {0,0};
-    float x1 = 250, y1 = 25, x2 = 250, y2 = 150, x3 = 250, y3 = 275;
+    float x1 = 250, y1 = 25, x2 = 250, y2 = 150, x3 = 250, y3 = 275, vb = 10, v = vb;
     float maxVel = 10;
-    float timer = 2.3f;
+    float timer = 2.3f, ftimer, ctimer, stimer;
     int dl = 0, currBG = 0;
     int numP;
     boolean first = true;
     int[] score = new int[3];
+    boolean fpower = false, cpower = false, spower = false, ispower = false;
 
 
     ArrayList<Obstacle> mineList = new ArrayList<Obstacle>();
@@ -44,6 +46,7 @@ public class MainGame implements Screen {
     float x,y;
     boolean need;
     float time;
+    Treasure chest = new Treasure(-1000);
 
     ArrayList<Sprite> alive;
 
@@ -116,6 +119,7 @@ public class MainGame implements Screen {
     public void render(float delta) {
 
         //TODO: fish collision
+        float chance = (float)Math.random();
 
         Gdx.gl.glClearColor(1, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -140,10 +144,42 @@ public class MainGame implements Screen {
 
 
         batch.begin();
+        if(chance<.321 && chance >.32){
+            //TODO: powerups!
+            chest = new Treasure(cam.position.x);
+            ispower = true;
+            //System.out.println("Triggered " + chest.sprite.getX() + " " + chest.sprite.getY());
+        }
         //ocean background
         batch.draw(ocean, currBG, 0);
         batch.draw(ocean2, currBG + ocean.getWidth(), 0);
+        chest.Render(batch);
+        if(ftimer > 5){
+            fpower = false;
+            ftimer = 0;
+        }
+        if(ctimer > 5){
+            cpower = false;
+            ctimer = 0;
+        }
+        if(stimer > 5){
+            spower = false;
+            stimer = 0;
+        }
+        if(fpower){
+            ftimer += Gdx.graphics.getDeltaTime();
+        }
+        if(cpower){
+            ctimer += Gdx.graphics.getDeltaTime();
+        }
+        if(spower){
+            stimer += Gdx.graphics.getDeltaTime();
+        }
 
+        //draw mines
+        for(Obstacle d : mineList){
+            d.Draw(batch);
+        }
         //draw mines
         for(Obstacle d : mineList) d.Draw(batch);
 
@@ -177,6 +213,43 @@ public class MainGame implements Screen {
             //check collision and move living players
             checkCollisions();
             checkAlive();
+
+            if(chest.pup.overlaps(fish.getBoundingRectangle())){
+                fpower = true;
+                ispower = false;
+            }
+            if(chest.pup.overlaps(crab.getBoundingRectangle())){
+                cpower = true;
+                ispower = false;
+            }
+            if(chest.pup.overlaps(seahorse.getBoundingRectangle())) {
+                ispower = false;
+                spower = true;
+            }
+            if(!ispower){
+                chest = new Treasure(-1000);
+            }
+            if(fpower){
+                fish.setAlpha(.5f);
+
+            }
+            if(cpower){
+                crab.setAlpha(.5f);
+
+            }
+            if(spower){
+                seahorse.setAlpha(.5f);
+
+            }
+            if(!fpower){
+                fish.setAlpha(1);
+            }
+            if(!cpower){
+                crab.setAlpha(1);
+            }
+            if(!spower){
+                seahorse.setAlpha(1);
+            }
 
             // obstacles
             need = false;
@@ -471,13 +544,13 @@ public class MainGame implements Screen {
 
         //kill if touches mine
         for(Obstacle i : mineList) {
-            if (hitbox[0].overlaps(i.hitbox)) {
+            if (hitbox[0].overlaps(i.hitbox) && !fpower) {
                 alive.remove(fish);
             }
-            if (hitbox[1].overlaps(i.hitbox)) {
+            if (hitbox[1].overlaps(i.hitbox) && !cpower) {
                 alive.remove(crab);
             }
-            if (hitbox[2].overlaps(i.hitbox)) {
+            if (hitbox[2].overlaps(i.hitbox) && !spower) {
                 alive.remove(seahorse);
             }
         }
