@@ -8,10 +8,13 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Circle;
+import com.badlogic.gdx.math.Vector3;
 import com.therrell.oceangame.Obstacle;
 import com.therrell.oceangame.OceanGame;
 
 import java.util.ArrayList;
+
 
 public class MainGame implements Screen {
 
@@ -19,7 +22,7 @@ public class MainGame implements Screen {
 
     //sprites, textures, and sounds
     SpriteBatch batch;
-    Texture fishPic, crabPic, sHorsePic, ocean, ocean2, lastalive, mine;
+    Texture fishPic, crabPic, sHorsePic, ocean, ocean2, lastalive, min;
     Sprite fish, crab, seahorse;
     Sound start;
 
@@ -32,8 +35,15 @@ public class MainGame implements Screen {
     int numP;
     boolean first = true;
 
+
+    ArrayList<Obstacle> mineList = new ArrayList<Obstacle>();
+    int delete;
+    float x,y;
+    boolean need;
+    float time;
+
     ArrayList<Sprite> alive;
-    ArrayList<Obstacle> mineList;
+    //ArrayList<Obstacle> mineList;
 
     public MainGame(OceanGame g, int p) {
         myGame = g;
@@ -54,9 +64,10 @@ public class MainGame implements Screen {
         ocean2 = new Texture("oceanflip.jpg");
 
         //mine
-        mine = new Texture("min.png");
+        //min = new Texture("min.png");
 
-
+        x = (float)Gdx.graphics.getWidth();
+        need = false;
         //manipulate sprites
         fish = new Sprite(fishPic);
         crab = new Sprite(crabPic);
@@ -93,12 +104,29 @@ public class MainGame implements Screen {
 
         Gdx.gl.glClearColor(1, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        int counter = 0;
+
+        for(Obstacle i : mineList){
+            if(i.sprite.getX() < cam.position.x-Gdx.graphics.getWidth()){
+                need = true;
+                delete = counter;
+            }
+            counter++;
+        }
+
+        if(need){
+            mineList.remove(delete);
+        }
 
         batch.begin();
 
         //ocean background
         batch.draw(ocean, currBG, 0);
         batch.draw(ocean2, currBG + ocean.getWidth(), 0);
+
+        for(Obstacle d : mineList){
+            d.Draw(batch);
+        }
 
         if (numP == 3) {
             fish.draw(batch);
@@ -125,8 +153,18 @@ public class MainGame implements Screen {
         crab.setPosition(x2, y2);
         seahorse.setPosition(x3, y3);
 
-        //TODO: handle collision
-
+        //handle collision
+        for(Obstacle i : mineList) {
+            if (fish.getBoundingRectangle().overlaps(i.hit)) {
+                alive.remove(fish);
+            }
+            if (crab.getBoundingRectangle().overlaps(i.hit)) {
+                alive.remove(crab);
+            }
+            if (seahorse.getBoundingRectangle().overlaps(i.hit)) {
+                alive.remove(seahorse);
+            }
+        }
 
         //start timer
         timer -= delta;
@@ -190,7 +228,6 @@ public class MainGame implements Screen {
                 seahorse.setY(Gdx.graphics.getHeight() - seahorse.getHeight());
                 y3 = seahorse.getY();
             }
-
             //bottom boundary
             if (fish.getY() < 0) {
                 fish.setY(0);
@@ -254,11 +291,23 @@ public class MainGame implements Screen {
             }
 
             //TODO: add obstacles
+            need = false;
+            Vector3 clickspace = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
+            cam.unproject(clickspace);
+            x = cam.position.x + Gdx.graphics.getWidth()/2;
+            y = (Gdx.graphics.getHeight()*(float)Math.random());
+            time += Gdx.graphics.getDeltaTime();
 
-
+            if(time>.5f){
+                //mine = new Obstacle(x, y);
+                mineList.add(new Obstacle( x, y));
+                time = 0;
+            }
         }
+
+
         //determines winner
-        if(alive.size() == 1)
+       if(alive.size() == 1)
         {
             lastalive = alive.get(0).getTexture();
         }
