@@ -12,7 +12,7 @@ import com.badlogic.gdx.math.Rectangle;
 public class Obstacle{
     static Texture min = new Texture("min.png");
     public Sprite sprite;
-    public Rectangle hit; //circle does not allow for overlap
+    public Rectangle hit, hitbox; //circle does not allow for overlap
 
     public Obstacle(float x, float y) {
         sprite = new Sprite(min);
@@ -20,6 +20,7 @@ public class Obstacle{
         sprite.setX(x);
         sprite.setY(y);
         hit = sprite.getBoundingRectangle();
+        hitbox = new Rectangle(hit.getX() + 9, hit.getY() + 12, 57, 56);
     }
 
     public void Draw(SpriteBatch batch){
